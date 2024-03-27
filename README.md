@@ -1,3 +1,13 @@
+# Run two terminals
+
+```sh
+# first terminal for source
+cargo watch -q -c -w src/ -x "run"
+
+# second terminal is quick_dev
+cargo watch -q -c -w examples/ -x "run --example quick_dev"
+```
+
 # AwesomeApp rust-web-app
 
 More info at: https://awesomeapp.dev/rust-web-app/
