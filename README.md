@@ -1,10 +1,12 @@
-# Run two terminals
+# Getting started - run with the following
+
+> NOTE: Install cargo watch with `cargo install cargo-watch`.
 
 ```sh
-# first terminal for source
+# Terminal 1 - To run the server.
 cargo watch -q -c -w src/ -x "run"
 
-# second terminal is quick_dev
+# Terminal 2 - To run the quick_dev.
 cargo watch -q -c -w examples/ -x "run --example quick_dev"
 ```
 
