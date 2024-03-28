@@ -19,7 +19,7 @@ pub enum Error {
 // region:    --- Axum IntoResponse
 impl IntoResponse for Error {
 	fn into_response(self) -> Response {
-		debug!("->> {:<12} - model::Error {self:?}", "INTO_RES");
+		debug!("{:<12} - model::Error {self:?}", "INTO_RES");
 
 		// Create a placeholder Axum reponse.
 		let mut response = StatusCode::INTERNAL_SERVER_ERROR.into_response();

@@ -14,7 +14,7 @@ pub async fn mw_reponse_map(
 	req_method: Method,
 	res: Response,
 ) -> Response {
-	debug!("->> {:<12} - mw_reponse_map", "RES_MAPPER");
+	debug!("{:<12} - mw_reponse_map", "RES_MAPPER");
 	let uuid = Uuid::new_v4();
 
 	// -- Get the eventual response error.
@@ -33,7 +33,7 @@ pub async fn mw_reponse_map(
 					}
 				});
 
-				debug!("->> CLIENT ERROR BODY:\n{client_error_body}");
+				debug!("CLIENT ERROR BODY:\n{client_error_body}");
 
 				// Build the new response from the client_error_body
 				(*status_code, Json(client_error_body)).into_response()
