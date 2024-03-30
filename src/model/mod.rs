@@ -2,6 +2,7 @@
 
 mod error;
 mod store;
+pub mod task;
 
 use crate::model::store::Db;
 
