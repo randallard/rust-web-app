@@ -3,22 +3,23 @@ use crate::model::base::DbBmc;
 use crate::model::ModelManager;
 use crate::model::{Result,Error};
 use serde::{Deserialize, Serialize};
+use sqlb::Fields;
 use sqlx::FromRow;
 
 use super::base;
 
-#[derive(Debug, Clone, FromRow, Serialize)]
+#[derive(Debug, Clone, Fields, FromRow, Serialize)]
 pub struct Task {
     pub id: i64,
     pub title: String,
 }
 
-#[derive(Deserialize)]
+#[derive(Fields, Deserialize)]
 pub struct TaskForCreate {
     pub title: String,
 }
 
-#[derive(Deserialize)]
+#[derive(Fields, Deserialize)]
 pub struct TaskForUpdate {
     pub title: Option<String>,
 }
@@ -31,47 +32,32 @@ impl DbBmc for TaskBmc {
 
 impl TaskBmc {
     pub async fn create(
-        _ctx: &Ctx,
+        ctx: &Ctx,
         mm: &ModelManager,
         task_c: TaskForCreate,
     ) -> Result<i64> {
-        let db = mm.db();
-
-        let (id,) = sqlx::query_as::<_,(i64,)>(
-            "INSERT INTO task (title) values ($1) returning id"
-        )
-        .bind(task_c.title)
-        .fetch_one(db)
-        .await?;
-        Ok(id)
+        base::create::<Self, _>(ctx,mm,task_c).await
     }
 
     pub async fn get(ctx: &Ctx, mm: &ModelManager, id: i64) -> Result<Task> {
         base::get::<Self, _>(ctx, mm, id).await
     }
 
-    pub async fn list(_ctx: &Ctx, mm: &ModelManager) -> Result<Vec<Task>> {
-        let db = mm.db();
-        let tasks: Vec<Task> = sqlx::query_as("SELECT * FROM task ORDER BY id")
-            .fetch_all(db)
-            .await?;
-
-        Ok(tasks)
+    pub async fn list(ctx: &Ctx, mm: &ModelManager) -> Result<Vec<Task>> {
+        base::list::<Self, _>(ctx, mm).await
     }
 
-    pub async fn delete(_ctx: &Ctx, mm: &ModelManager, id: i64) -> Result<()> {
-        let db = mm.db();
-        let count = sqlx::query("DELETE FROM task WHERE id = $1")
-            .bind(id)
-            .execute(db)
-            .await?
-            .rows_affected();
+    pub async fn update(
+        ctx: &Ctx,
+        mm: &ModelManager,
+        id: i64,
+        task_u: TaskForUpdate,
+    ) -> Result<()> {
+        base::update::<Self, _>(ctx, mm, id, task_u).await
+    }
 
-        if count == 0 {
-            return Err(Error::EntityNotFound { entity: "task", id });
-        }
-
-        Ok(())
+    pub async fn delete(ctx: &Ctx, mm: &ModelManager, id: i64) -> Result<()> {
+        base::delete::<Self>(ctx,mm,id).await
     }
 }
 
