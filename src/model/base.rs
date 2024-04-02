@@ -15,9 +15,9 @@ where
 {
     let db = mm.db();
 
-    let sql = format!("SELECT * FROM {} WHERE id = $1", MC::TABLE);
-    let entity: E = sqlx::query_as(&sql)
-        .bind(id)
+    let entity: E = sqlb::select()
+        .table(MC::TABLE)
+        .and_where("id","=", id)
         .fetch_optional(db)
         .await?
         .ok_or(Error::EntityNotFound { entity: MC::TABLE, id })?;
