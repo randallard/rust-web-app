@@ -1,8 +1,11 @@
 use crate::ctx::Ctx;
+use crate::model::base::DbBmc;
 use crate::model::ModelManager;
 use crate::model::{Result,Error};
 use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
+
+use super::base;
 
 #[derive(Debug, Clone, FromRow, Serialize)]
 pub struct Task {
@@ -22,6 +25,10 @@ pub struct TaskForUpdate {
 
 pub struct TaskBmc;
 
+impl DbBmc for TaskBmc {
+    const TABLE: &'static str = "task";
+}
+
 impl TaskBmc {
     pub async fn create(
         _ctx: &Ctx,
@@ -39,16 +46,8 @@ impl TaskBmc {
         Ok(id)
     }
 
-    pub async fn get(_ctx: &Ctx, mm: &ModelManager, id: i64) -> Result<Task> {
-        let db = mm.db();
-
-        let task: Task = sqlx::query_as("SELECT * FROM task WHERE id = $1")
-            .bind(id)
-            .fetch_optional(db)
-            .await?
-            .ok_or(Error::EntityNotFound { entity: "task", id })?;
-
-        Ok(task)
+    pub async fn get(ctx: &Ctx, mm: &ModelManager, id: i64) -> Result<Task> {
+        base::get::<Self, _>(ctx, mm, id).await
     }
 
     pub async fn list(_ctx: &Ctx, mm: &ModelManager) -> Result<Vec<Task>> {
@@ -144,7 +143,7 @@ mod tests {
 
         let tasks = TaskBmc::list(&ctx, &mm).await?;
 
-        //println!("->> {tasks:?}");
+        // println!("->> {tasks:?}");
 
         let tasks: Vec<Task> = tasks
             .into_iter()
