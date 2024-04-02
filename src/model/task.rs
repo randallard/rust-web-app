@@ -144,6 +144,8 @@ mod tests {
 
         let tasks = TaskBmc::list(&ctx, &mm).await?;
 
+        //println!("->> {tasks:?}");
+
         let tasks: Vec<Task> = tasks
             .into_iter()
             .filter(|t| t.title.starts_with("test_list_ok"))
