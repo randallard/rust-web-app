@@ -4,4 +4,9 @@ RUST_LOG="rust_web_app=debug"
 
 SERVICE_DB_URL="postgres://app_user:dev_only_pwd@localhost/app_db"
 
+SERVICE_PWD_KEY="wrdr7wguL94RGe5DMnigXrJUlRnHPC30CDtfYVRQTCah7EAcBiI16i4ihomNQLkKSuZoX1SQm-tibCLNLZVrDQ"
+
+SERVICE_TOKEN_KEY="fnEJ1_coKe-OdzyIokN093r43-dJuImVePBRju1ttvXJ-QGHQ98PV5NKZbfxrJ1zL74txp-hzxfVAsM2qi-grg"
+SERVICE_TOKEN_DURATION_SEC="1800"
+
 SERVICE_WEB_FOLDER="web-folder/"
