@@ -66,6 +66,7 @@ mod tests {
 
     #[test]
     fn test_token_display_ok() -> Result<()> {
+        let fx_token_str = "";
         let fx_token = Token {
             ident: "fx-ident-01".to_string(),
             exp: "2024-05-01T00:00:00Z".to_string(),
@@ -73,6 +74,7 @@ mod tests {
         };
 
         println!("->> {fx_token}");
+        assert_eq!(fx_token.to_string(), fx_token_str);
 
         Ok(())
     }
