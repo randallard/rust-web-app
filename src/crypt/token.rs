@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 use crate::config;
 use crate::crypt::{Error, Result};
 
@@ -5,6 +7,12 @@ pub struct Token {
     pub ident: String,
     pub exp: String,
     pub sign_b64u: String,
+}
+
+impl Display for Token {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        todo!()
+    }
 }
 
 pub fn generate_web_token(user: &str, salt: &str) -> Result<Token> {
@@ -42,4 +50,23 @@ fn _token_sign_into_b64u(
     key: &[u8],
 ) -> Result<String> {
     todo!()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use anyhow::Result;
+
+    #[test]
+    fn test_token_display_ok() -> Result<()> {
+        let fx_token = Token {
+            ident: "fx-ident-01".to_string(),
+            exp: "2024-05-01T00:00:00Z".to_string(),
+            sign_b64u: "some-sign-b64u-encoded".to_string(),
+        };
+
+        println!("->> {fx_token}");
+
+        Ok(())
+    }
 }

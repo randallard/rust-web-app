@@ -1,11 +1,12 @@
 pub type Result<T> = core::result::Result<T, Error>;
 
+#[derive(Debug)]
 pub enum Error {
 	// -- Time
     DateFailParse(String),
 
     // -- Base64
-    FailToB64Decode,
+    FailToB64uDecode,
 }
 
 // region:    --- Error Boilerplate
