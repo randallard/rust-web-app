@@ -2,6 +2,7 @@ use std::fmt::Display;
 
 use crate::config;
 use crate::crypt::{Error, Result};
+use crate::utils::b64u_encode;
 
 pub struct Token {
     pub ident: String,
@@ -11,7 +12,13 @@ pub struct Token {
 
 impl Display for Token {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f,"Hello")
+        write!(
+            f,
+            "{}.{}.{}",
+            b64u_encode(&self.ident),
+            b64u_encode(&self.exp),
+            self.sign_b64u
+        )
     }
 }
 
