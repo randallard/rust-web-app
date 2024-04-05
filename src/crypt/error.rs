@@ -6,6 +6,9 @@ pub type Result<T> = core::result::Result<T, Error>;
 pub enum Error {
     KeyFailHmac,
 	PwdNotMatching,
+	TokenInvalidFormat,
+	TokenCannotDecodeIdent,
+	TokenCannotDecodeExp,
 }
 
 // region:    --- Error Boilerplate
