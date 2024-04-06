@@ -12,11 +12,13 @@ async fn main() -> Result<()> {
 	let req_login = hc.do_post(
 		"/api/login",
 		json!({
-			"username": "demo1ddd",
+			"username": "demo1",
 			"pwd": "welcome"
 		}),
 	);
 	req_login.await?.print().await?;
+
+	hc.do_get("/hello").await?.print().await?;
 
 	Ok(())
 }

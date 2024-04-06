@@ -135,7 +135,7 @@ mod tests {
     }
 
     #[test]
-    fn test_doken_from_str_ok() -> Result <()> {
+    fn test_token_from_str_ok() -> Result <()> {
         let fx_token_str = "ZngtaWRlbnQtMDE.MjAyNC0wNS0wMVQwMDowMDowMFo.some-sign-b64u-encoded";
         let fx_token = Token {
             ident: "fx-ident-01".to_string(),

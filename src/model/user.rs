@@ -40,6 +40,7 @@ pub struct UserForLogin {
 pub struct UserForAuth {
     pub id: i64,
     pub username: String,
+    pub token_salt: Uuid,
 }
 
 pub trait UserBy: HasFields + for<'r> FromRow<'r, PgRow> + Unpin + Send {}
