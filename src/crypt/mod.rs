@@ -47,7 +47,7 @@ mod tests {
         };
         let fx_res = encrypt_into_b64u(&fx_key, &fx_enc_content)?;
         let res = encrypt_into_b64u(&fx_key, &fx_enc_content)?;
-        println!("->> {res}");
+        
         assert_eq!(res,fx_res);
         Ok(())
     }
