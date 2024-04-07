@@ -82,3 +82,4 @@ cargo watch -q -c -x test model::task::tests::test_create -- --nocapture
 docker run --rm --name pg -p 5432:5432  -e POSTGRES_PASSWORD=welcome  postgres:15
 
 cargo watch -q -c -x "test crypt -- --nocapture"
+```
