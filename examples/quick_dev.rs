@@ -18,15 +18,22 @@ async fn main() -> Result<()> {
 	);
 	req_login.await?.print().await?;
 
+	let req_list_tasks = hc.do_post(
+		"/api/rpc",
+		json!({
+			"id": 1,
+			"method": "list_tasks",
+		}),
+	);
+	req_list_tasks.await?.print().await?;
+
 	let req_logoff = hc.do_post(
 		"/api/logoff",
 		json!({
 			"logoff": true
 		}),
 	);
-	req_logoff.await?.print().await?;
-
-	hc.do_get("/hello").await?.print().await?;
+	// req_logoff.await?.print().await?;
 
 	Ok(())
 }
