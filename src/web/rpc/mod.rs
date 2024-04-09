@@ -2,10 +2,10 @@ mod task_rpc;
 
 use axum::{extract::State, response::{IntoResponse, Response}, routing::post, Json, Router};
 use serde::Deserialize;
-use serde_json::{json, to_value, Value};
+use serde_json::{from_value, json, to_value, Value};
 use tracing::debug;
 
-use crate::{ctx::Ctx, model::ModelManager, web::{rpc::task_rpc::list_tasks, Error, Result}};
+use crate::{ctx::Ctx, model::ModelManager, web::{rpc::task_rpc::{create_task, list_tasks}, Error, Result}};
 
 #[derive(Deserialize)]
 struct RpcRequest {
@@ -58,7 +58,15 @@ async fn _rpc_handler(
     debug!("{:<12} - _rpc_handler - method: {rpc_method}", "HANDLER");
 
     let result_json: Value = match rpc_method.as_str() {
-        "create_task" => todo!(),
+        "create_task" => {
+            let params = rpc_params.ok_or(Error::RpcMissingParams {
+                rpc_method: "create_task".to_string(),
+            })?;
+            let params = from_value(params).map_err(|_| Error::RpcFailJsonParams { 
+                rpc_method: "create_task".to_string(),
+            })?;
+            create_task(ctx,mm,params).await.map(to_value)??
+        },
         "list_tasks" => list_tasks(mm, ctx).await.map(to_value)??,
         "update_task" => todo!(),
         "delete_task" => todo!(),
