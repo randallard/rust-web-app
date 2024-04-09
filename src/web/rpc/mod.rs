@@ -44,6 +44,12 @@ async fn rpc_handler(
     _rpc_handler(ctx, mm, rpc_req).await.into_response()
 }
 
+macro_rules! exec_rpc_fn {
+    ($rpc_fn:expr, $ctx:expr, $mm:expr) => {
+        $rpc_fn($ctx, $mm).await.map(to_value)??
+    };
+}
+
 async fn _rpc_handler(
     ctx: Ctx,
     mm: ModelManager,
@@ -67,7 +73,7 @@ async fn _rpc_handler(
             })?;
             create_task(ctx,mm,params).await.map(to_value)??
         },
-        "list_tasks" => list_tasks(mm, ctx).await.map(to_value)??,
+        "list_tasks" => exec_rpc_fn!(list_tasks,ctx, mm),
         "update_task" => todo!(),
         "delete_task" => todo!(),
 
