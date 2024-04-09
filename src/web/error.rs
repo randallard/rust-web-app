@@ -91,6 +91,12 @@ impl Error {
 				(StatusCode::FORBIDDEN, ClientError::LOGIN_FAIL)
 			}
 
+			// -- Model
+			Model(model::Error::EntityNotFound { entity , id }) => (
+				StatusCode::BAD_REQUEST,
+				ClientError::ENTITY_NOT_FOUND { entity, id: *id },
+			),
+
 			// --Auth
 			CtxExt(_) => (StatusCode::FORBIDDEN, ClientError::NO_AUTH),
 
@@ -103,11 +109,14 @@ impl Error {
 	}
 }
 
-#[derive(Debug, strum_macros::AsRefStr)]
+#[derive(Debug, Serialize, strum_macros::AsRefStr)]
+#[serde(tag="message",content="detail")]
 #[allow(non_camel_case_types)]
 pub enum ClientError {
 	LOGIN_FAIL,
 	NO_AUTH,
+	ENTITY_NOT_FOUND { entity: &'static str, id: i64 },
+
 	SERVICE_ERROR,
 }
 // endregion: --- Client Error
