@@ -139,6 +139,47 @@ use serial_test::serial;
 
 		Ok(())
 	}
+
+	#[serial]
+	#[tokio::test]
+	async fn test_list_limit_over_max_err() -> Result<()> {
+		// -- Setup & Fixtures
+		let mm = _dev_utils::init_test().await;
+		let ctx = Ctx::root_ctx();
+		let fx_titles = &["test_list_all_ok-task 01", "test_list_all_ok-task 02"];
+		_dev_utils::seed_tasks(&ctx, &mm, fx_titles).await?;
+
+		// -- Exec
+		let tasks = TaskBmc::list(&ctx, &mm, None, None).await?;
+
+		// -- Check
+		let list_options = serde_json::from_value(json!({
+			"order_bys": "!id", 
+			"limit": 1001,
+		}))?;
+		let res = TaskBmc::list(&ctx, &mm, None, Some(list_options)).await;
+
+		println!("{:#?}",res);
+		
+		assert!(
+			matches!(
+				res,
+				Err(Error::ListLimitOverMax {
+					max: base::LIST_LIMIT_MAX,
+					actual: 1001,
+				})
+			),
+			"ListLimitOverMax not matching"
+		);
+
+		// -- Clean
+		for task in tasks.iter() {
+			TaskBmc::delete(&ctx, &mm, task.id).await?;
+		}
+
+		Ok(())
+	}
+
 	#[serial]
 	#[tokio::test]
 	async fn test_list_all_ok() -> Result<()> {

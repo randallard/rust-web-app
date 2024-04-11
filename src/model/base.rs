@@ -9,6 +9,9 @@ use sea_query_binder::SqlxBinder;
 use sqlx::postgres::PgRow;
 use sqlx::FromRow;
 
+const LIST_LIMIT_DEFAULT: i64 = 300;
+pub const LIST_LIMIT_MAX: i64 = 1000;
+
 #[derive(Iden)]
 pub enum CommonIden {
 	Id,
@@ -18,6 +21,32 @@ pub trait DbBmc {
 	const TABLE: &'static str;
 	fn table_ref() -> TableRef {
 		TableRef::Table(SIden(Self::TABLE).into_iden())
+	}
+}
+
+pub fn finalize_list_options(
+	list_options: Option<ListOptions>
+) -> Result<ListOptions> {
+	if let Some(mut list_options) = list_options {
+		if let Some(limit) = list_options.limit {
+			if limit > LIST_LIMIT_MAX {
+				return Err(Error::ListLimitOverMax {
+					max: LIST_LIMIT_MAX,
+					actual: limit,
+				});
+			}
+		}
+		else {
+			list_options.limit = Some(LIST_LIMIT_DEFAULT);
+		}
+		Ok(list_options)
+	}
+	else {
+		Ok(ListOptions {
+			limit: Some(LIST_LIMIT_DEFAULT),
+			offset: None,
+			order_bys: Some("id".into()),
+		})
 	}
 }
 
@@ -95,9 +124,8 @@ where
 		query.cond_where(cond);
 	}
 
-	if let Some(list_options) = list_options {
-		list_options.apply_to_sea_query(&mut query);
-	}
+	let list_options = finalize_list_options(list_options)?;
+	list_options.apply_to_sea_query(&mut query);
 
 	let (sql, values) = query.build_sqlx(PostgresQueryBuilder);
 	let entities = sqlx::query_as_with::<_,E,_>(&sql,values)
