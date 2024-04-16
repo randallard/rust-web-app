@@ -1,16 +1,13 @@
-use derive_more::From;
 use serde::Serialize;
-
-use super::scheme;
 
 pub type Result<T> = core::result::Result<T, Error>;
 
-#[derive(Debug, Serialize, From)]
+#[derive(Debug, Serialize)]
 pub enum Error {
-    PwdWithSchemeFailedParse,
+	KeyFail,
 
-    #[from]
-    Scheme(scheme::Error),
+	// -- Pwd
+	NotMatching,
 }
 
 // region:    --- Error Boilerplate
