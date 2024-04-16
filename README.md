@@ -29,6 +29,9 @@ docker run --rm --name pg -p 5432:5432 \
 # In another terminal (tab) run psql:
 docker exec -it -u postgres pg psql
 
+# then on the database you can connect to app_db with
+\c app_db
+
 # (optional) For pg to print all sql statements.
 # In psql command line started above.
 ALTER DATABASE postgres SET log_statement = 'all';
