@@ -4,7 +4,8 @@ mod scheme;
 use std::str::FromStr;
 
 pub use self::error::{Error, Result};
-use self::scheme::{get_scheme, SchemeStatus, DEFAULT_SCHEME};
+pub use scheme::SchemeStatus;
+use self::scheme::{get_scheme, Scheme, DEFAULT_SCHEME};
 
 use lazy_regex::regex_captures;
 use uuid::Uuid;
@@ -82,10 +83,13 @@ mod tests {
             salt: fx_salt,
         };
 
-        let pwd_hashed = hash_pwd(&fx_to_hash)?;
-        println!("->> pwd_hashed: {pwd_hashed}");
+        let pwd_hashed = hash_for_scheme("01", &fx_to_hash)?;
         let pwd_validate = validate_pwd(&fx_to_hash,&pwd_hashed)?;
-        println!("->>  validate: {pwd_validate:?}");
+
+        assert!(
+            matches!(pwd_validate, SchemeStatus::Outdated),
+            "status should be SchemeStatus::Outdated"
+        );
 
         Ok(())
     }
