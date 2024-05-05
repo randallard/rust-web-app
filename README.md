@@ -1,3 +1,11 @@
+## My TODO - 
+Add to task
+
+        pub item: Item,
+        pub assigned_to_group: Uuid,
+
+Create flow for Motion from attorney create motion -> create docket entry to create QC task to Chambers task
+
 # Rust10x Web App Blueprint for Production Coding
 
 More info at: https://rust10x.com/web-app

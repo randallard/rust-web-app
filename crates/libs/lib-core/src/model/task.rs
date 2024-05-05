@@ -8,12 +8,15 @@ use modql::filter::{
 };
 use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
+use uuid::Uuid;
 
 // region:    --- Task Types
 #[derive(Debug, Clone, Fields, FromRow, Serialize)]
 pub struct Task {
 	pub id: i64,
 
+	pub item: Item,
+	pub assigned_to_group: Uuid,
 	pub title: String,
 	pub done: bool,
 }
